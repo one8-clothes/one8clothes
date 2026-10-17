@@ -72,8 +72,29 @@ input:focus{border-color:#87CEEB}
         <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
         <div class="total-row"><span>Delivery</span><span id="delivery">₹49</span></div>
         <div class="total-final"><span>Total</span><span id="total">₹0</span></div>
-        <button class="pay-btn" id="payBtn" onclick="placeOrder()">Pay Now →</button>
-        <div class="secure">🔒 Secured Payment via Razorpay</div>
+       <!-- Payment Method Selection -->
+<div style="margin-bottom:16px">
+  <label style="font-size:13px;font-weight:700;color:#444;display:block;margin-bottom:10px">
+    Select Payment Method
+  </label>
+  <div style="display:flex;gap:10px">
+    <div onclick="selectPayment('online')" id="onlineOption"
+      style="flex:1;border:2px solid #6B8E23;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#f0f7e8">
+      <div style="font-size:22px;margin-bottom:4px">💳</div>
+      <div style="font-size:13px;font-weight:700;color:#6B8E23">Pay Online</div>
+      <div style="font-size:11px;color:#94a3b8">UPI · Card · Net Banking</div>
+    </div>
+    <div onclick="selectPayment('cod')" id="codOption"
+      style="flex:1;border:2px solid #e0e0e0;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#fff">
+      <div style="font-size:22px;margin-bottom:4px">💵</div>
+      <div style="font-size:13px;font-weight:700;color:#555">Cash on Delivery</div>
+      <div style="font-size:11px;color:#94a3b8">Pay when delivered</div>
+    </div>
+  </div>
+</div>
+
+<button class="pay-btn" id="payBtn" onclick="placeOrder()">Pay Now →</button>
+<div class="secure">🔒 Secured Payment via Razorpay</div>
       </div>
     </div>
   </div>
@@ -105,6 +126,34 @@ if (cart.length === 0) {
   document.getElementById('subtotal').textContent = '₹'+subtotalAmt
   document.getElementById('delivery').textContent = deliveryAmt===0?'FREE':'₹'+deliveryAmt
   document.getElementById('total').textContent = '₹'+totalAmt
+}
+  let selectedPayment = 'online'
+
+function selectPayment(type){
+  selectedPayment = type
+  const onlineEl = document.getElementById('onlineOption')
+  const codEl = document.getElementById('codOption')
+  const payBtn = document.getElementById('payBtn')
+
+  if(type === 'online'){
+    onlineEl.style.border = '2px solid #6B8E23'
+    onlineEl.style.background = '#f0f7e8'
+    onlineEl.querySelector('div:nth-child(2)').style.color = '#6B8E23'
+    codEl.style.border = '2px solid #e0e0e0'
+    codEl.style.background = '#fff'
+    codEl.querySelector('div:nth-child(2)').style.color = '#555'
+    payBtn.textContent = 'Pay Now →'
+    payBtn.style.background = '#E8734A'
+  } else {
+    codEl.style.border = '2px solid #6B8E23'
+    codEl.style.background = '#f0f7e8'
+    codEl.querySelector('div:nth-child(2)').style.color = '#6B8E23'
+    onlineEl.style.border = '2px solid #e0e0e0'
+    onlineEl.style.background = '#fff'
+    onlineEl.querySelector('div:nth-child(2)').style.color = '#555'
+    payBtn.textContent = 'Place Order (Cash on Delivery) →'
+    payBtn.style.background = '#6B8E23'
+  }
 }
 
 async function placeOrder() {
