@@ -1,59 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Checkout — one8</title>
+<title>Checkout — One8</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f7fa;color:#1a1a1a}
-.nav{background:#87CEEB;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:3px;text-decoration:none}
-.back{color:#fff;font-size:14px;text-decoration:none;font-weight:600}
-
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a}
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.logo{font-size:24px;font-weight:900;color:#6B8E23;letter-spacing:2px;text-decoration:none}
+.logo span{color:#f97316}
+.back{color:#6B8E23;font-size:14px;text-decoration:none;font-weight:600}
 .container{max-width:900px;margin:0 auto;padding:24px 16px}
 h1{font-size:24px;font-weight:800;margin-bottom:24px}
-
 .grid{display:grid;grid-template-columns:1fr;gap:20px}
 @media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
-
 .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.card-title{font-size:17px;font-weight:700;margin-bottom:18px}
+.card-title{font-size:17px;font-weight:700;margin-bottom:18px;color:#1a1a1a}
 .form-group{margin-bottom:14px}
 label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:5px}
-input{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 14px;font-size:14px;outline:none;transition:border 0.2s}
-input:focus{border-color:#87CEEB}
-
+input{width:100%;border:2px solid #e0e0e0;border-radius:10px;padding:10px 14px;font-size:14px;outline:none;transition:border 0.2s}
+input:focus{border-color:#6B8E23}
+.pay-methods{display:flex;gap:10px;margin-bottom:20px}
+.pay-option{flex:1;border:2px solid #e0e0e0;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s}
+.pay-option.selected{border-color:#6B8E23;background:#f0f7e8}
+.pay-option-icon{font-size:24px;margin-bottom:4px}
+.pay-option-name{font-size:13px;font-weight:700;color:#555}
+.pay-option.selected .pay-option-name{color:#6B8E23}
+.pay-option-sub{font-size:11px;color:#94a3b8;margin-top:2px}
 .order-item{display:flex;justify-content:space-between;font-size:14px;padding:10px 0;border-bottom:1px solid #f0f0f0}
 .order-item:last-of-type{border:none}
 .total-row{display:flex;justify-content:space-between;font-size:14px;color:#555;margin-bottom:6px}
 .total-final{display:flex;justify-content:space-between;font-size:18px;font-weight:800;margin:12px 0 20px;padding-top:12px;border-top:2px solid #f0f0f0}
-
-.pay-btn{width:100%;background:#E8734A;color:#fff;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer}
-.pay-btn:hover{background:#d45a2a}
+.pay-btn{width:100%;background:#E8734A;color:#fff;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s}
+.pay-btn:hover{transform:translateY(-1px)}
 .pay-btn:disabled{opacity:0.5;cursor:not-allowed}
+.pay-btn.cod{background:#6B8E23}
 .secure{text-align:center;font-size:12px;color:#aaa;margin-top:8px}
-
 .empty{text-align:center;padding:60px;color:#aaa}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a href="index.html" class="logo">one8</a>
-  <a href="index.html" class="back">← Continue Shopping</a>
+  <a href="index.html" class="logo">ONE<span>8</span></a>
+  <a href="index.html" class="back">Continue Shopping</a>
 </nav>
 
 <div class="container">
   <h1>Checkout</h1>
+
   <div id="emptyMsg" class="empty" style="display:none">
-    <p style="font-size:40px">🛒</p>
-    <p>Your cart is empty</p>
-    <a href="index.html" style="color:#87CEEB;font-weight:600">Shop Now →</a>
+    <p style="font-size:40px">Shopping cart is empty</p>
+    <a href="index.html" style="color:#6B8E23;font-weight:600">Shop Now</a>
   </div>
+
   <div class="grid" id="checkoutGrid">
-    <!-- Delivery Form -->
     <div class="card">
       <div class="card-title">Delivery Details</div>
       <div class="form-group"><label>Full Name *</label><input type="text" id="custName" placeholder="Your full name"/></div>
@@ -64,37 +66,30 @@ input:focus{border-color:#87CEEB}
       <div class="form-group"><label>Pincode *</label><input type="text" id="custPincode" placeholder="6 digit pincode"/></div>
     </div>
 
-    <!-- Order Summary -->
     <div>
       <div class="card">
         <div class="card-title">Order Summary</div>
         <div id="orderItems"></div>
-        <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
-        <div class="total-row"><span>Delivery</span><span id="delivery">₹49</span></div>
-        <div class="total-final"><span>Total</span><span id="total">₹0</span></div>
-       <!-- Payment Method Selection -->
-<div style="margin-bottom:16px">
-  <label style="font-size:13px;font-weight:700;color:#444;display:block;margin-bottom:10px">
-    Select Payment Method
-  </label>
-  <div style="display:flex;gap:10px">
-    <div onclick="selectPayment('online')" id="onlineOption"
-      style="flex:1;border:2px solid #6B8E23;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#f0f7e8">
-      <div style="font-size:22px;margin-bottom:4px">💳</div>
-      <div style="font-size:13px;font-weight:700;color:#6B8E23">Pay Online</div>
-      <div style="font-size:11px;color:#94a3b8">UPI · Card · Net Banking</div>
-    </div>
-    <div onclick="selectPayment('cod')" id="codOption"
-      style="flex:1;border:2px solid #e0e0e0;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#fff">
-      <div style="font-size:22px;margin-bottom:4px">💵</div>
-      <div style="font-size:13px;font-weight:700;color:#555">Cash on Delivery</div>
-      <div style="font-size:11px;color:#94a3b8">Pay when delivered</div>
-    </div>
-  </div>
-</div>
+        <div class="total-row"><span>Subtotal</span><span id="subtotal">0</span></div>
+        <div class="total-row"><span>Delivery</span><span id="delivery">49</span></div>
+        <div class="total-final"><span>Total</span><span id="total">0</span></div>
 
-<button class="pay-btn" id="payBtn" onclick="placeOrder()">Pay Now →</button>
-<div class="secure">🔒 Secured Payment via Razorpay</div>
+        <div class="card-title" style="margin-bottom:12px">Payment Method</div>
+        <div class="pay-methods">
+          <div class="pay-option selected" id="onlineOption" onclick="selectPayment('online')">
+            <div class="pay-option-icon">&#x1F4B3;</div>
+            <div class="pay-option-name">Pay Online</div>
+            <div class="pay-option-sub">UPI - Card - Net Banking</div>
+          </div>
+          <div class="pay-option" id="codOption" onclick="selectPayment('cod')">
+            <div class="pay-option-icon">&#x1F4B5;</div>
+            <div class="pay-option-name">Cash on Delivery</div>
+            <div class="pay-option-sub">Pay when delivered</div>
+          </div>
+        </div>
+
+        <button class="pay-btn" id="payBtn" onclick="placeOrder()">Pay Now</button>
+        <div class="secure">Secured by Razorpay</div>
       </div>
     </div>
   </div>
@@ -103,109 +98,126 @@ input:focus{border-color:#87CEEB}
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 <script src="firebase-config.js"></script>
 
 <script>
-const cart = JSON.parse(localStorage.getItem('one8_cart') || '[]')
+var cart = JSON.parse(localStorage.getItem('one8_cart') || '[]')
+var selectedPayment = 'online'
 
-if (cart.length === 0) {
+if(cart.length === 0){
   document.getElementById('checkoutGrid').style.display = 'none'
   document.getElementById('emptyMsg').style.display = 'block'
 } else {
-  const subtotalAmt = cart.reduce((a,b)=>a+b.price*b.qty,0)
-  const deliveryAmt = subtotalAmt >= 499 ? 0 : 49
-  const totalAmt = subtotalAmt + deliveryAmt
-
-  document.getElementById('orderItems').innerHTML = cart.map(item=>`
-    <div class="order-item">
-      <span>${item.name} (${item.size}) × ${item.qty}</span>
-      <span>₹${item.price*item.qty}</span>
-    </div>
-  `).join('')
-
-  document.getElementById('subtotal').textContent = '₹'+subtotalAmt
-  document.getElementById('delivery').textContent = deliveryAmt===0?'FREE':'₹'+deliveryAmt
-  document.getElementById('total').textContent = '₹'+totalAmt
+  var subtotalAmt = cart.reduce(function(a,b){ return a + b.price*b.qty }, 0)
+  var deliveryAmt = subtotalAmt >= 499 ? 0 : 49
+  var totalAmt = subtotalAmt + deliveryAmt
+  document.getElementById('orderItems').innerHTML = cart.map(function(item){
+    return '<div class="order-item"><span>' + item.name + ' (' + item.size + ') x ' + item.qty + '</span><span>Rs.' + (item.price*item.qty) + '</span></div>'
+  }).join('')
+  document.getElementById('subtotal').textContent = 'Rs.' + subtotalAmt
+  document.getElementById('delivery').textContent = deliveryAmt === 0 ? 'FREE' : 'Rs.' + deliveryAmt
+  document.getElementById('total').textContent = 'Rs.' + totalAmt
 }
-  let selectedPayment = 'online'
 
 function selectPayment(type){
   selectedPayment = type
-  const onlineEl = document.getElementById('onlineOption')
-  const codEl = document.getElementById('codOption')
-  const payBtn = document.getElementById('payBtn')
-
+  var onlineEl = document.getElementById('onlineOption')
+  var codEl = document.getElementById('codOption')
+  var payBtn = document.getElementById('payBtn')
   if(type === 'online'){
-    onlineEl.style.border = '2px solid #6B8E23'
-    onlineEl.style.background = '#f0f7e8'
-    onlineEl.querySelector('div:nth-child(2)').style.color = '#6B8E23'
-    codEl.style.border = '2px solid #e0e0e0'
-    codEl.style.background = '#fff'
-    codEl.querySelector('div:nth-child(2)').style.color = '#555'
-    payBtn.textContent = 'Pay Now →'
-    payBtn.style.background = '#E8734A'
+    onlineEl.classList.add('selected')
+    codEl.classList.remove('selected')
+    payBtn.textContent = 'Pay Now'
+    payBtn.className = 'pay-btn'
   } else {
-    codEl.style.border = '2px solid #6B8E23'
-    codEl.style.background = '#f0f7e8'
-    codEl.querySelector('div:nth-child(2)').style.color = '#6B8E23'
-    onlineEl.style.border = '2px solid #e0e0e0'
-    onlineEl.style.background = '#fff'
-    onlineEl.querySelector('div:nth-child(2)').style.color = '#555'
-    payBtn.textContent = 'Place Order (Cash on Delivery) →'
-    payBtn.style.background = '#6B8E23'
+    codEl.classList.add('selected')
+    onlineEl.classList.remove('selected')
+    payBtn.textContent = 'Place Order - Cash on Delivery'
+    payBtn.className = 'pay-btn cod'
   }
 }
 
-async function placeOrder() {
-  const name = document.getElementById('custName').value.trim()
-  const phone = document.getElementById('custPhone').value.trim()
-  const address = document.getElementById('custAddress').value.trim()
-  const pincode = document.getElementById('custPincode').value.trim()
+async function placeOrder(){
+  var name = document.getElementById('custName').value.trim()
+  var phone = document.getElementById('custPhone').value.trim()
+  var address = document.getElementById('custAddress').value.trim()
+  var pincode = document.getElementById('custPincode').value.trim()
 
-  if (!name || !phone || !address || !pincode) {
-    alert('Please fill all required fields (Name, Phone, Address, Pincode)')
+  if(!name || !phone || !address || !pincode){
+    alert('Please fill all required fields - Name, Phone, Address, Pincode')
     return
   }
 
-  const subtotalAmt = cart.reduce((a,b)=>a+b.price*b.qty,0)
-  const deliveryAmt = subtotalAmt >= 499 ? 0 : 49
-  const totalAmt = subtotalAmt + deliveryAmt
+  var subtotalAmt = cart.reduce(function(a,b){ return a + b.price*b.qty }, 0)
+  var deliveryAmt = subtotalAmt >= 499 ? 0 : 49
+  var totalAmt = subtotalAmt + deliveryAmt
+  var currentUser = auth.currentUser
 
-  // Load Razorpay
-  const script = document.createElement('script')
+  if(selectedPayment === 'cod'){
+    var btn = document.getElementById('payBtn')
+    btn.textContent = 'Placing Order...'
+    btn.disabled = true
+    try{
+      var orderRef = await db.collection('orders').add({
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: document.getElementById('custEmail').value,
+        address: address,
+        city: document.getElementById('custCity').value,
+        pincode: pincode,
+        items: cart,
+        total: totalAmt,
+        paymentMethod: 'cod',
+        paymentId: 'COD',
+        status: 'placed',
+        userId: currentUser ? currentUser.uid : 'guest',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      localStorage.setItem('elen_last_order', orderRef.id)
+      localStorage.removeItem('one8_cart')
+      window.location.href = 'success.html'
+    } catch(e){
+      alert('Something went wrong. Please try again.')
+      btn.textContent = 'Place Order - Cash on Delivery'
+      btn.disabled = false
+    }
+    return
+  }
+
+  var script = document.createElement('script')
   script.src = 'https://checkout.razorpay.com/v1/checkout.js'
   document.body.appendChild(script)
 
-  script.onload = () => {
-    const options = {
-      key: 'rzp_test_Tj54JcCAt08qsq', // your test key
+  script.onload = function(){
+    var options = {
+      key: 'rzp_test_Tj54JcCAt08qsq',
       amount: totalAmt * 100,
       currency: 'INR',
-      name: 'one8 Clothing',
-      description: cart.length + ' item(s)',
-      handler: async function(response) {
-        // Save order to Firebase
-        const currentUser = auth.currentUser
-const orderRef = await db.collection('orders').add({
-  customerName: name,
-  customerPhone: phone,
-  customerEmail: document.getElementById('custEmail').value,
-  address: address,
-  city: document.getElementById('custCity').value,
-  pincode: pincode,
-  items: cart,
-  total: totalAmt,
-  paymentId: response.razorpay_payment_id,
-  status: 'placed',
-  userId: currentUser ? currentUser.uid : 'guest',
-  createdAt: firebase.firestore.FieldValue.serverTimestamp()
-})
-        localStorage.removeItem('one8_cart')
+      name: 'One8 Clothing',
+      description: cart.length + ' items',
+      handler: async function(response){
+        var orderRef = await db.collection('orders').add({
+          customerName: name,
+          customerPhone: phone,
+          customerEmail: document.getElementById('custEmail').value,
+          address: address,
+          city: document.getElementById('custCity').value,
+          pincode: pincode,
+          items: cart,
+          total: totalAmt,
+          paymentMethod: 'online',
+          paymentId: response.razorpay_payment_id,
+          status: 'placed',
+          userId: currentUser ? currentUser.uid : 'guest',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
         localStorage.setItem('elen_last_order', orderRef.id)
-window.location.href = 'success.html'
+        localStorage.removeItem('one8_cart')
+        window.location.href = 'success.html'
       },
-      prefill: { name, contact: phone, email: document.getElementById('custEmail').value },
-      theme: { color: '#87CEEB' }
+      prefill: { name: name, contact: phone, email: document.getElementById('custEmail').value },
+      theme: { color: '#6B8E23' }
     }
     new Razorpay(options).open()
   }
