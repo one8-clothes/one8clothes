@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Account — One8</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh}
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.logo{font-size:24px;font-weight:900;color:#6B8E23;letter-spacing:2px;text-decoration:none}
+.logo span{color:#f97316}
+.logout-btn{background:#fee2e2;color:#ef4444;border:none;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+
+.container{max-width:700px;margin:0 auto;padding:24px 16px}
+
+.profile-card{background:#fff;border-radius:20px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#6B8E23,#556B2F);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;font-weight:800;flex-shrink:0}
+.profile-info h2{font-size:20px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.profile-info p{font-size:14px;color:#94a3b8}
+
+.section-title{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:16px}
+
+.order-card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #f0f0f0}
+.order-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.order-id{font-size:13px;font-weight:700;color:#1a1a1a}
+.order-date{font-size:12px;color:#94a3b8;margin-top:2px}
+.order-amount{font-size:18px;font-weight:900;color:#6B8E23}
+
+.order-items{margin-bottom:14px}
+.order-item-row{display:flex;justify-content:space-between;font-size:13px;color:#555;padding:6px 0;border-bottom:1px solid #f5f5f5}
+.order-item-row:last-child{border:none}
+
+.track-mini{display:flex;align-items:center;gap:0;margin-top:14px;overflow-x:auto;padding-bottom:4px}
+.track-mini::-webkit-scrollbar{display:none}
+.mini-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:60px}
+.mini-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:4px}
+.mini-dot.done{background:#dcfce7;border:2px solid #22c55e}
+.mini-dot.active{background:#fef9c3;border:2px solid #eab308;animation:pulse 1.5s infinite}
+.mini-dot.pending{background:#f0f0f0;border:2px solid #ddd}
+.mini-label{font-size:9px;color:#94a3b8;text-align:center;font-weight:600;white-space:nowrap}
+.mini-label.done{color:#16a34a}
+.mini-label.active{color:#ca8a04}
+.mini-line{flex:1;height:2px;margin-bottom:18px;min-width:16px}
+.mini-line.done{background:#22c55e}
+.mini-line.pending{background:#e0e0e0}
+
+.empty-orders{text-align:center;padding:48px;color:#94a3b8;background:#fff;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.empty-orders p:first-child{font-size:56px;margin-bottom:12px}
+.shop-btn{display:inline-block;background:#6B8E23;color:#fff;padding:12px 28px;border-radius:12px;text-decoration:none;font-weight:700;margin-top:16px;font-size:14px}
+
+.loading{text-align:center;padding:48px;color:#94a3b8}
+
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">ONE<span>8</span></a>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</nav>
+
+<div class="container">
+
+  <!-- Profile Card -->
+  <div class="profile-card" id="profileCard" style="display:none">
+    <div class="avatar" id="avatarEl">U</div>
+    <div class="profile-info">
+      <h2 id="userName">Loading...</h2>
+      <p id="userEmail"></p>
+    </div>
+  </div>
+
+  <!-- Orders -->
+  <div class="section-title">My Orders</div>
+  <div id="ordersList">
+    <div class="loading">Loading your orders...</div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+const trackSteps = [
+  { key:'placed',    icon:'🛍️', label:'Placed' },
+  { key:'confirmed', icon:'✅', label:'Confirmed' },
+  { key:'shipped',   icon:'🚚', label:'Shipped' },
+  { key:'delivery',  icon:'📦', label:'Out for Delivery' },
+  { key:'delivered', icon:'🎉', label:'Delivered' },
+]
+const trackOrder = ['placed','confirmed','shipped','delivery','delivered']
+
+auth.onAuthStateChanged(async user => {
+  if(!user){
+    window.location.href = 'user-login.html'
+    return
+  }
+  // Show profile
+  const name = user.displayName || user.email.split('@')[0]
+  document.getElementById('userName').textContent = name
+  document.getElementById('userEmail').textContent = user.email
+  document.getElementById('avatarEl').textContent = name.charAt(0).toUpperCase()
+  document.getElementById('profileCard').style.display = 'flex'
+  // Load orders
+  loadOrders(user.uid)
+})
+
+async function loadOrders(uid){
+  const el = document.getElementById('ordersList')
+  try{
+    const snap = await db.collection('orders')
+      .where('userId','==',uid)
+      .orderBy('createdAt','desc')
+      .get()
+
+    if(snap.empty){
+      el.innerHTML = `
+        <div class="empty-orders">
+          <p>🛒</p>
+          <p>No orders yet</p>
+          <a href="index.html" class="shop-btn">Start Shopping →</a>
+        </div>`
+      return
+    }
+
+    el.innerHTML = snap.docs.map(doc => {
+      const o = doc.data()
+      const status = o.status || 'placed'
+      const currentIndex = trackOrder.indexOf(status)
+      const date = o.createdAt?.toDate().toLocaleDateString('en-IN') || 'N/A'
+      const items = o.items || []
+
+      const miniTrack = trackSteps.map((step, i) => {
+        const state = i < currentIndex ? 'done' : i === currentIndex ? 'active' : 'pending'
+        const line = i < trackSteps.length - 1
+          ? `<div class="mini-line ${i < currentIndex ? 'done':'pending'}"></div>`
+          : ''
+        return `
+          <div class="mini-step">
+            <div class="mini-dot ${state}">${state==='done'?'✓':step.icon}</div>
+            <div class="mini-label ${state}">${step.label}</div>
+          </div>
+          ${line}
+        `
+      }).join('')
+
+      return `
+        <div class="order-card">
+          <div class="order-top">
+            <div>
+              <div class="order-id">Order #${doc.id.slice(0,8).toUpperCase()}</div>
+              <div class="order-date">${date}</div>
+            </div>
+            <div class="order-amount">₹${o.total}</div>
+          </div>
+          <div class="order-items">
+            ${items.map(item=>`
+              <div class="order-item-row">
+                <span>${item.name} (${item.size}) × ${item.qty}</span>
+                <span>₹${item.price * item.qty}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="track-mini">${miniTrack}</div>
+        </div>
+      `
+    }).join('')
+  } catch(e){
+    el.innerHTML = '<div class="loading">Error loading orders. Please refresh.</div>'
+  }
+}
+
+function logout(){
+  auth.signOut().then(() => window.location.href = 'index.html')
+}
+</script>
+</body>
+</html>
