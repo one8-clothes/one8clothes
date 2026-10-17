@@ -564,8 +564,7 @@ function searchProducts(){
 
 saveCart()
 loadProducts()
-</script>
-    // Show login or profile button
+   // Show login or profile button
 auth.onAuthStateChanged(user => {
   if(user){
     document.getElementById('loginNavBtn').style.display = 'none'
@@ -575,5 +574,6 @@ auth.onAuthStateChanged(user => {
     document.getElementById('profileNavBtn').style.display = 'none'
   }
 })
+</script>
 </body>
 </html>
