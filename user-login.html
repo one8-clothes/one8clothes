@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — One8</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;flex-direction:column}
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.logo{font-size:24px;font-weight:900;color:#6B8E23;letter-spacing:2px;text-decoration:none}
+.logo span{color:#f97316}
+.back{color:#6B8E23;font-size:14px;font-weight:600;text-decoration:none}
+.container{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{background:#fff;border-radius:20px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+.logo-big{font-size:32px;font-weight:900;color:#6B8E23;letter-spacing:3px;text-align:center;margin-bottom:6px}
+.logo-big span{color:#f97316}
+.tagline{text-align:center;color:#94a3b8;font-size:14px;margin-bottom:28px}
+
+.tabs{display:flex;background:#f5f5f5;border-radius:12px;padding:4px;margin-bottom:24px}
+.tab{flex:1;padding:10px;text-align:center;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:700;background:none;color:#94a3b8;transition:all 0.2s}
+.tab.active{background:#fff;color:#6B8E23;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+
+.form-group{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px}
+input{width:100%;border:2px solid #e0e0e0;border-radius:12px;padding:12px 16px;font-size:14px;outline:none;transition:border 0.2s}
+input:focus{border-color:#6B8E23}
+
+.submit-btn{width:100%;background:#6B8E23;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:all 0.2s}
+.submit-btn:hover{background:#556B2F;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+.divider{text-align:center;color:#94a3b8;font-size:13px;margin:16px 0;position:relative}
+.divider::before{content:'';position:absolute;left:0;top:50%;width:42%;height:1px;background:#e0e0e0}
+.divider::after{content:'';position:absolute;right:0;top:50%;width:42%;height:1px;background:#e0e0e0}
+
+.google-btn{width:100%;background:#fff;color:#444;border:2px solid #e0e0e0;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s}
+.google-btn:hover{border-color:#6B8E23;background:#f8f8f8}
+
+.error{color:#ef4444;font-size:13px;text-align:center;margin-bottom:12px;padding:10px;background:#fee2e2;border-radius:8px;display:none}
+.success{color:#16a34a;font-size:13px;text-align:center;margin-bottom:12px;padding:10px;background:#dcfce7;border-radius:8px;display:none}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">ONE<span>8</span></a>
+  <a href="index.html" class="back">← Back to Shop</a>
+</nav>
+
+<div class="container">
+  <div class="card">
+    <div class="logo-big">ONE<span>8</span></div>
+    <div class="tagline">Premium Men's Clothing</div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" id="loginTab" onclick="showTab('login')">Login</button>
+      <button class="tab" id="signupTab" onclick="showTab('signup')">Sign Up</button>
+    </div>
+
+    <div class="error" id="errorMsg"></div>
+    <div class="success" id="successMsg"></div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••"/>
+      </div>
+      <button class="submit-btn" onclick="loginUser()" id="loginBtn">Login →</button>
+      <div class="divider">or</div>
+      <button class="google-btn" onclick="googleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"/>
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="signupForm" style="display:none">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signupName" placeholder="Your full name"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="signupPhone" placeholder="10 digit number"/>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signupEmail" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="Min 6 characters"/>
+      </div>
+      <button class="submit-btn" onclick="signupUser()" id="signupBtn">Create Account →</button>
+      <div class="divider">or</div>
+      <button class="google-btn" onclick="googleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"/>
+        Continue with Google
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+// Check already logged in
+auth.onAuthStateChanged(user => {
+  if(user) window.location.href = 'user-profile.html'
+})
+
+function showTab(tab){
+  document.getElementById('loginForm').style.display = tab==='login' ? 'block' : 'none'
+  document.getElementById('signupForm').style.display = tab==='signup' ? 'block' : 'none'
+  document.getElementById('loginTab').classList.toggle('active', tab==='login')
+  document.getElementById('signupTab').classList.toggle('active', tab==='signup')
+  hideMessages()
+}
+
+function showError(msg){
+  const el = document.getElementById('errorMsg')
+  el.textContent = msg
+  el.style.display = 'block'
+  document.getElementById('successMsg').style.display = 'none'
+}
+
+function showSuccess(msg){
+  const el = document.getElementById('successMsg')
+  el.textContent = msg
+  el.style.display = 'block'
+  document.getElementById('errorMsg').style.display = 'none'
+}
+
+function hideMessages(){
+  document.getElementById('errorMsg').style.display = 'none'
+  document.getElementById('successMsg').style.display = 'none'
+}
+
+async function loginUser(){
+  const email = document.getElementById('loginEmail').value.trim()
+  const password = document.getElementById('loginPassword').value
+  const btn = document.getElementById('loginBtn')
+  if(!email || !password){ showError('Please enter email and password'); return }
+  btn.textContent = 'Logging in...'
+  btn.disabled = true
+  try{
+    await auth.signInWithEmailAndPassword(email, password)
+    window.location.href = 'user-profile.html'
+  } catch(e){
+    showError('Invalid email or password')
+    btn.textContent = 'Login →'
+    btn.disabled = false
+  }
+}
+
+async function signupUser(){
+  const name = document.getElementById('signupName').value.trim()
+  const phone = document.getElementById('signupPhone').value.trim()
+  const email = document.getElementById('signupEmail').value.trim()
+  const password = document.getElementById('signupPassword').value
+  const btn = document.getElementById('signupBtn')
+  if(!name || !email || !password){ showError('Please fill all fields'); return }
+  if(password.length < 6){ showError('Password must be at least 6 characters'); return }
+  btn.textContent = 'Creating account...'
+  btn.disabled = true
+  try{
+    const result = await auth.createUserWithEmailAndPassword(email, password)
+    await db.collection('users').doc(result.user.uid).set({
+      name, phone, email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    await result.user.updateProfile({ displayName: name })
+    window.location.href = 'user-profile.html'
+  } catch(e){
+    showError(e.message)
+    btn.textContent = 'Create Account →'
+    btn.disabled = false
+  }
+}
+
+async function googleLogin(){
+  const provider = new firebase.auth.GoogleAuthProvider()
+  try{
+    const result = await auth.signInWithPopup(provider)
+    const user = result.user
+    await db.collection('users').doc(user.uid).set({
+      name: user.displayName,
+      email: user.email,
+      phone: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true })
+    window.location.href = 'user-profile.html'
+  } catch(e){
+    showError('Google login failed. Try again.')
+  }
+}
+</script>
+</body>
+</html>
