@@ -135,7 +135,7 @@ async function placeOrder() {
       description: cart.length + ' item(s)',
       handler: async function(response) {
         // Save order to Firebase
-        await db.collection('orders').add({
+        const orderRef = await db.collection('orders').add({
           customerName: name,
           customerPhone: phone,
           customerEmail: document.getElementById('custEmail').value,
@@ -149,7 +149,8 @@ async function placeOrder() {
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         })
         localStorage.removeItem('one8_cart')
-        window.location.href = 'success.html'
+        localStorage.setItem('elen_last_order', orderRef.id)
+window.location.href = 'success.html'
       },
       prefill: { name, contact: phone, email: document.getElementById('custEmail').value },
       theme: { color: '#87CEEB' }
