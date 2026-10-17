@@ -492,17 +492,21 @@ async function loadProducts(cat='all'){
   const grid=document.getElementById('productGrid')
   grid.innerHTML='<div class="skeleton"></div>'.repeat(4)
   try{
-   let q=db.collection('products')
-if(cat!=='all')q=q.where('category','==',cat)
-const snap=await q.orderBy('createdAt','desc').get()
-    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}))
-    document.getElementById('productCount').textContent=allProducts.length+' Products'
-    renderProducts(allProducts)
+    const snap=await db.collection('products').get()
+    let allDocs=snap.docs.map(d=>({id:d.id,...d.data()}))
+    if(cat!=='all')allDocs=allDocs.filter(p=>p.category===cat)
+    allDocs=allDocs.sort((a,b)=>{
+      const aTime=a.createdAt?.seconds||0
+      const bTime=b.createdAt?.seconds||0
+      return bTime-aTime
+    })
+    allProducts=allDocs
+    document.getElementById('productCount').textContent=allDocs.length+' Products'
+    renderProducts(allDocs)
   }catch(e){
     grid.innerHTML='<div class="empty-state"><p>👔</p><p>No products yet. Add from admin panel.</p></div>'
   }
 }
-
 function renderProducts(products){
   const grid=document.getElementById('productGrid')
   if(!products.length){
