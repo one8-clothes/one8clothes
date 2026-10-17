@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <meta name="referrer" content="no-referrer-when-downgrade">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -211,6 +212,14 @@ footer{background:#1a2000;color:#94a3b8;padding:48px 20px 24px}
     <a href="track.html" 
    style="color:#6B8E23;font-size:13px;font-weight:600;text-decoration:none;border:1.5px solid #6B8E23;padding:8px 14px;border-radius:8px;margin-right:8px">
   📦 Track Order
+</a>
+<a href="user-login.html" id="loginNavBtn"
+  style="color:#6B8E23;font-size:13px;font-weight:700;text-decoration:none;border:2px solid #6B8E23;padding:8px 14px;border-radius:10px;margin-right:8px;display:none">
+  👤 Login
+</a>
+<a href="user-profile.html" id="profileNavBtn"
+  style="color:#6B8E23;font-size:13px;font-weight:700;text-decoration:none;border:2px solid #6B8E23;padding:8px 14px;border-radius:10px;margin-right:8px;display:none">
+  👤 My Account
 </a>
 <button class="nav-cart" onclick="openCart()">
   🛒 Cart <span class="cart-badge" id="cartCount">0</span>
@@ -555,6 +564,16 @@ function searchProducts(){
 
 saveCart()
 loadProducts()
+  // Show login or profile button
+auth.onAuthStateChanged(user => {
+  if(user){
+    document.getElementById('loginNavBtn').style.display = 'none'
+    document.getElementById('profileNavBtn').style.display = 'inline-flex'
+  } else {
+    document.getElementById('loginNavBtn').style.display = 'inline-flex'
+    document.getElementById('profileNavBtn').style.display = 'none'
+  }
+})
 </script>
 </body>
 </html>
