@@ -4,7 +4,7 @@
   <meta name="referrer" content="no-referrer-when-downgrade">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>one8 Admin Panel</title>
+<title>ONE4 Admin Panel</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f7fa;color:#1a1a1a}
@@ -82,7 +82,7 @@ textarea{resize:vertical;min-height:80px}
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-logo">one8 Admin</div>
+  <div class="nav-logo">ONE4 Admin</div>
   <div class="nav-right">
     <a href="index.html" class="nav-btn">← View Shop</a>
     <button class="nav-btn danger" onclick="logout()">Logout</button>
@@ -243,7 +243,7 @@ async function addProduct() {
     // Upload image to Firebase Storage
     const formData = new FormData()
 formData.append('file', imageFile)
-formData.append('upload_preset', 'one8_products')
+formData.append('upload_preset', 'ONE4_products')
 
 const cloudRes = await fetch(
   'https://api.cloudinary.com/v1_1/rnza44ir/image/upload',
