@@ -102,7 +102,7 @@ input:focus{border-color:#6B8E23}
 <script src="firebase-config.js"></script>
 
 <script>
-var cart = JSON.parse(localStorage.getItem('one8_cart') || '[]')
+var cart = JSON.parse(localStorage.getItem('one4_cart') || '[]')
 var selectedPayment = 'online'
 
 if(cart.length === 0){
@@ -175,7 +175,7 @@ async function placeOrder(){
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       })
       localStorage.setItem('elen_last_order', orderRef.id)
-      localStorage.removeItem('one8_cart')
+      localStorage.removeItem('one4_cart')
       window.location.href = 'success.html'
     } catch(e){
       alert('Something went wrong. Please try again.')
@@ -213,7 +213,7 @@ async function placeOrder(){
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         })
         localStorage.setItem('elen_last_order', orderRef.id)
-        localStorage.removeItem('one8_cart')
+        localStorage.removeItem('one4_cart')
         window.location.href = 'success.html'
       },
       prefill: { name: name, contact: phone, email: document.getElementById('custEmail').value },
