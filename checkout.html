@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Checkout — one8</title>
@@ -135,19 +136,21 @@ async function placeOrder() {
       description: cart.length + ' item(s)',
       handler: async function(response) {
         // Save order to Firebase
-        const orderRef = await db.collection('orders').add({
-          customerName: name,
-          customerPhone: phone,
-          customerEmail: document.getElementById('custEmail').value,
-          address: address,
-          city: document.getElementById('custCity').value,
-          pincode: pincode,
-          items: cart,
-          total: totalAmt,
-          paymentId: response.razorpay_payment_id,
-          status: 'paid',
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        })
+        const currentUser = auth.currentUser
+const orderRef = await db.collection('orders').add({
+  customerName: name,
+  customerPhone: phone,
+  customerEmail: document.getElementById('custEmail').value,
+  address: address,
+  city: document.getElementById('custCity').value,
+  pincode: pincode,
+  items: cart,
+  total: totalAmt,
+  paymentId: response.razorpay_payment_id,
+  status: 'placed',
+  userId: currentUser ? currentUser.uid : 'guest',
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+})
         localStorage.removeItem('one8_cart')
         localStorage.setItem('elen_last_order', orderRef.id)
 window.location.href = 'success.html'
