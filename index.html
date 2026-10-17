@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="referrer" content="no-referrer-when-downgrade">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>one8 — Premium Men's Clothing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f5f5;color:#1a1a1a}
+
+/* ── NAV ── */
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;height:64px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.logo{font-size:24px;font-weight:900;color:#6B8E23;letter-spacing:2px;text-decoration:none}
+.logo span{color:#f97316}
+.nav-search{flex:1;max-width:500px;margin:0 24px;position:relative}
+.nav-search input{width:100%;padding:10px 16px 10px 42px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s;background:#f8f8f8}
+.nav-search input:focus{border-color:#6B8E23;background:#fff}
+.nav-search .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#aaa;font-size:16px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-cart{background:linear-gradient(135deg,#6B8E23,#556B2F);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:8px;position:relative;transition:all 0.2s}
+.nav-cart:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(14,165,233,0.4)}
+.cart-badge{background:#f97316;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+
+/* ── TOP BAR ── */
+.topbar{background:linear-gradient(90deg,#6B8E23,#556B2F);color:#fff;text-align:center;padding:8px;font-size:12px;font-weight:600;letter-spacing:0.3px}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#1a2000 0%,#1e3a5f 50%,#6B8E23 100%);padding:60px 20px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-tag{display:inline-block;background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.4);color:#fb923c;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:20px}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:900;color:#fff;line-height:1.15;margin-bottom:16px}
+.hero h1 span{color:#8FBC45}
+.hero p{font-size:16px;color:#94a3b8;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;box-shadow:0 4px 15px rgba(249,115,22,0.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(249,115,22,0.5)}
+.btn-secondary{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:all 0.2s}
+.btn-secondary:hover{background:rgba(255,255,255,0.2)}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:40px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-num{font-size:28px;font-weight:900;color:#8FBC45}
+.hero-stat-label{font-size:12px;color:#94a3b8;margin-top:2px}
+
+/* ── MARQUEE ── */
+.marquee-wrap{background:#6B8E23;padding:10px 0;overflow:hidden}
+.marquee{display:flex;gap:48px;animation:marquee 20s linear infinite;white-space:nowrap}
+.marquee span{color:#fff;font-size:13px;font-weight:600}
+.marquee span::before{content:'★ ';color:#fbbf24}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── CATEGORIES ── */
+.section{max-width:1200px;margin:0 auto;padding:40px 16px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.section-title{font-size:22px;font-weight:800;color:#1a1a1a}
+.section-title span{color:#6B8E23}
+.see-all{color:#6B8E23;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #6B8E23;padding:6px 14px;border-radius:8px;transition:all 0.2s}
+.see-all:hover{background:#6B8E23;color:#fff}
+
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(min-width:600px){.cats{grid-template-columns:repeat(4,1fr)}}
+.cat-card{background:#fff;border-radius:16px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.25s;text-decoration:none;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.cat-card:hover{border-color:#6B8E23;transform:translateY(-4px);box-shadow:0 12px 24px rgba(14,165,233,0.15)}
+.cat-icon{font-size:44px;margin-bottom:12px;display:block}
+.cat-name{font-weight:700;color:#1a1a1a;font-size:15px;margin-bottom:4px}
+.cat-count{font-size:12px;color:#94a3b8}
+
+/* ── OFFER BANNER ── */
+.offer-banner{margin:0 16px 24px;border-radius:20px;background:linear-gradient(135deg,#7c3aed,#4f46e5);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;max-width:1168px;margin-left:auto;margin-right:auto}
+.offer-text h3{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.offer-text p{font-size:14px;color:#c4b5fd}
+.offer-btn{background:#fff;color:#7c3aed;border:none;padding:10px 24px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+
+/* ── FILTER BAR ── */
+.filter-wrap{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.filter-label{font-size:12px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{flex-shrink:0;padding:8px 20px;border-radius:20px;border:1.5px solid #e0e0e0;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#555;transition:all 0.2s}
+.filter-btn:hover{border-color:#6B8E23;color:#6B8E23}
+.filter-btn.active{background:#6B8E23;color:#fff;border-color:#6B8E23;box-shadow:0 4px 12px rgba(14,165,233,0.3)}
+
+/* ── PRODUCTS GRID ── */
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:600px){.products-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.products-grid{grid-template-columns:repeat(4,1fr)}}
+
+.product-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);transition:all 0.25s;cursor:pointer;position:relative}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,0.12)}
+.product-badge{position:absolute;top:10px;left:10px;background:#f97316;color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;z-index:1;text-transform:uppercase;letter-spacing:0.5px}
+.product-wish{position:absolute;top:10px;right:10px;background:#fff;border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);font-size:16px;z-index:1;transition:all 0.2s}
+.product-wish:hover{transform:scale(1.1)}
+.product-img{width:100%;aspect-ratio:3/4;object-fit:cover;background:linear-gradient(135deg,#F4F7E8,#EEF2DC);display:flex;align-items:center;justify-content:center;font-size:72px;overflow:hidden}
+.product-img img{width:100%;height:100%;object-fit:cover}
+.product-body{padding:14px}
+.product-brand{font-size:10px;color:#6B8E23;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.product-name{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-type{font-size:11px;color:#94a3b8;margin-bottom:10px;text-transform:capitalize}
+.size-row{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.size-btn{padding:4px 9px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#fff;transition:all 0.15s;color:#555}
+.size-btn:hover{border-color:#6B8E23;color:#6B8E23}
+.size-btn.selected{background:#6B8E23;color:#fff;border-color:#6B8E23}
+.product-footer{display:flex;align-items:center;justify-content:space-between}
+.price-wrap{display:flex;flex-direction:column;gap:2px}
+.product-mrp{font-size:11px;color:#94a3b8;text-decoration:line-through}
+.product-price{font-size:18px;font-weight:900;color:#1a1a1a}
+.add-btn{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(249,115,22,0.4)}
+.add-btn.added{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+/* ── TRUST BADGES ── */
+.trust{background:#fff;padding:32px 16px;margin-top:16px}
+.trust-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:600px){.trust-grid{grid-template-columns:repeat(4,1fr)}}
+.trust-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:20px;border-radius:14px;background:#f8fafc;border:1px solid #e8e8e8}
+.trust-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.trust-icon.blue{background:#E8F0D0}
+.trust-icon.orange{background:#ffedd5}
+.trust-icon.green{background:#dcfce7}
+.trust-icon.purple{background:#f3e8ff}
+.trust-title{font-weight:700;font-size:14px;color:#1a1a1a}
+.trust-sub{font-size:12px;color:#94a3b8}
+
+/* ── FOOTER ── */
+footer{background:#1a2000;color:#94a3b8;padding:48px 20px 24px}
+.footer-top{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:32px;margin-bottom:32px}
+@media(min-width:700px){.footer-top{grid-template-columns:2fr 1fr 1fr}}
+.footer-logo{font-size:28px;font-weight:900;color:#6B8E23;letter-spacing:2px;margin-bottom:12px}
+.footer-logo span{color:#f97316}
+.footer-desc{font-size:14px;line-height:1.7;max-width:280px}
+.footer-heading{color:#fff;font-weight:700;font-size:15px;margin-bottom:16px}
+.footer-links a{display:block;color:#94a3b8;text-decoration:none;font-size:14px;margin-bottom:10px;transition:color 0.2s}
+.footer-links a:hover{color:#6B8E23}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:14px}
+.contact-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.footer-bottom{max-width:1200px;margin:0 auto;border-top:1px solid #1e293b;padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px}
+.footer-bottom-right{display:flex;gap:16px}
+.footer-bottom-right a{color:#94a3b8;text-decoration:none}
+.footer-bottom-right a:hover{color:#6B8E23}
+
+/* ── CART SIDEBAR ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;backdrop-filter:blur(2px)}
+.overlay.open{display:block}
+.cart-sidebar{position:fixed;right:0;top:0;bottom:0;width:min(400px,100vw);background:#fff;z-index:301;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+.cart-sidebar.open{transform:translateX(0)}
+.cart-header{background:linear-gradient(135deg,#6B8E23,#556B2F);padding:20px;display:flex;align-items:center;justify-content:space-between}
+.cart-header h2{color:#fff;font-size:18px;font-weight:800}
+.cart-close{background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.cart-close:hover{background:rgba(255,255,255,0.3)}
+.cart-items{flex:1;overflow-y:auto;padding:16px}
+.cart-empty{text-align:center;padding:48px 0;color:#94a3b8}
+.cart-empty p:first-child{font-size:56px;margin-bottom:12px}
+.cart-empty p:last-child{font-size:15px;font-weight:500}
+.cart-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #f0f0f0}
+.ci-img{width:64px;height:80px;border-radius:10px;object-fit:cover;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden}
+.ci-img img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1}
+.ci-name{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.ci-size{font-size:11px;color:#94a3b8;margin-bottom:8px}
+.ci-row{display:flex;align-items:center;justify-content:space-between}
+.qty-ctrl{display:flex;align-items:center;gap:0;border:1.5px solid #e0e0e0;border-radius:8px;overflow:hidden}
+.qty-btn{padding:5px 12px;border:none;background:#fff;cursor:pointer;font-size:16px;font-weight:700;color:#555;transition:background 0.2s}
+.qty-btn:hover{background:#f0f0f0}
+.qty-num{padding:5px 10px;font-size:14px;font-weight:700;border-left:1.5px solid #e0e0e0;border-right:1.5px solid #e0e0e0;min-width:36px;text-align:center}
+.ci-price{font-weight:800;font-size:15px;color:#1a1a1a}
+.ci-remove{background:none;border:none;color:#fca5a5;cursor:pointer;font-size:18px;padding:4px;border-radius:6px}
+.ci-remove:hover{background:#fee2e2;color:#ef4444}
+.cart-footer{padding:16px;border-top:1px solid #f0f0f0;background:#f8fafc}
+.cart-calc{background:#fff;border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #e8e8e8}
+.calc-row{display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:6px}
+.calc-row.free{color:#16a34a;font-weight:600}
+.calc-divider{border:none;border-top:1px dashed #e0e0e0;margin:10px 0}
+.calc-total{display:flex;justify-content:space-between;font-size:17px;font-weight:900;color:#1a1a1a}
+.checkout-btn{width:100%;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 15px rgba(249,115,22,0.3)}
+.checkout-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(249,115,22,0.4)}
+.secure-txt{text-align:center;font-size:11px;color:#94a3b8;margin-top:8px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:all 0.35s cubic-bezier(0.4,0,0.2,1);pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.2);display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOADING ── */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:16px;height:320px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.empty-state{text-align:center;padding:64px 20px;color:#94a3b8;grid-column:1/-1}
+.empty-state p:first-child{font-size:56px;margin-bottom:16px}
+.empty-state p:last-child{font-size:16px;font-weight:500}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .nav-search{display:none}
+  .hero{padding:40px 16px}
+  .hero-stats{gap:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">🎉 Grand Opening Sale — Free Delivery on all orders above ₹499 | Call: 8208556485</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="logo">ONE<span>8</span></a>
+  <div class="nav-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search shirts, t-shirts, jeans..." id="searchInput" oninput="searchProducts()"/>
+  </div>
+  <div class="nav-right">
+    <button class="nav-cart" onclick="openCart()">
+      🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">✨ New Collection 2026</div>
+  <h1>India's Premium<br><span>Men's Fashion</span><br>Starts Here</h1>
+  <p>Handpicked shirts, t-shirts & more — crafted for the modern man. Quality you feel, prices you love.</p>
+  <div class="hero-btns">
+    <a href="#products" class="btn-primary">🛍️ Shop Now</a>
+    <a href="#categories" class="btn-secondary">Browse Categories →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">500+</div><div class="hero-stat-label">Happy Customers</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">50+</div><div class="hero-stat-label">Products</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">₹899</div><div class="hero-stat-label">Starting Price</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Customer Rating</div></div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>Free Delivery Above ₹499</span>
+    <span>100% Cotton Fabric</span>
+    <span>Easy 7-Day Returns</span>
+    <span>Secure Payment</span>
+    <span>Premium Quality</span>
+    <span>New Arrivals Weekly</span>
+    <span>Free Delivery Above ₹499</span>
+    <span>100% Cotton Fabric</span>
+    <span>Easy 7-Day Returns</span>
+    <span>Secure Payment</span>
+    <span>Premium Quality</span>
+    <span>New Arrivals Weekly</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section" id="categories">
+  <div class="section-header">
+    <div class="section-title">Shop by <span>Category</span></div>
+  </div>
+  <div class="cats">
+    <a class="cat-card" onclick="filterProducts('shirt',null)">
+      <span class="cat-icon">👔</span>
+      <div class="cat-name">Shirts</div>
+      <div class="cat-count">Plain · Stripe · Check</div>
+    </a>
+    <a class="cat-card" onclick="filterProducts('tshirt',null)">
+      <span class="cat-icon">👕</span>
+      <div class="cat-name">T-Shirts</div>
+      <div class="cat-count">Casual · Sports</div>
+    </a>
+    <a class="cat-card" onclick="filterProducts('jeans',null)">
+      <span class="cat-icon">👖</span>
+      <div class="cat-name">Jeans</div>
+      <div class="cat-count">Slim · Regular · Baggy</div>
+    </a>
+    <a class="cat-card" onclick="filterProducts('nightpant',null)">
+      <span class="cat-icon">🩳</span>
+      <div class="cat-name">Night Pants</div>
+      <div class="cat-count">Comfort · Pyjama</div>
+    </a>
+  </div>
+</div>
+
+<!-- OFFER BANNER -->
+<div class="offer-banner">
+  <div class="offer-text">
+    <h3>🔥 Flat ₹899 — All Shirts!</h3>
+    <p>Plain · Stripe · Check — Premium cotton shirts at one unbeatable price</p>
+  </div>
+  <button class="offer-btn" onclick="filterProducts('shirt',null)">Shop Shirts →</button>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section" id="products">
+  <div class="section-header">
+    <div class="section-title">Our <span>Collection</span></div>
+    <a href="#" class="see-all" id="productCount">0 Products</a>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-wrap">
+    <div class="filter-label">Filter by Category</div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all',this)">All Products</button>
+      <button class="filter-btn" onclick="filterProducts('shirt',this)">👔 Shirts</button>
+      <button class="filter-btn" onclick="filterProducts('tshirt',this)">👕 T-Shirts</button>
+      <button class="filter-btn" onclick="filterProducts('jeans',this)">👖 Jeans</button>
+      <button class="filter-btn" onclick="filterProducts('nightpant',this)">🩳 Night Pants</button>
+    </div>
+  </div>
+
+  <div class="products-grid" id="productGrid">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+</div>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="trust-grid">
+    <div class="trust-item"><div class="trust-icon blue">🚚</div><div class="trust-title">Free Delivery</div><div class="trust-sub">Orders above ₹499</div></div>
+    <div class="trust-item"><div class="trust-icon orange">✅</div><div class="trust-title">100% Genuine</div><div class="trust-sub">Premium cotton fabric</div></div>
+    <div class="trust-item"><div class="trust-icon green">↩️</div><div class="trust-title">Easy Returns</div><div class="trust-sub">7-day return policy</div></div>
+    <div class="trust-item"><div class="trust-icon purple">🔒</div><div class="trust-title">Secure Payment</div><div class="trust-sub">Razorpay protected</div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">ONE<span style="color:#f97316">8</span></div>
+      <p class="footer-desc">Premium men's clothing at honest prices. Quality shirts, t-shirts, jeans and more — crafted for the modern Indian man.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Quick Links</div>
+      <div class="footer-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="#products">👔 All Products</a>
+        <a href="admin-login.html">🔐 Admin Panel</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Contact Us</div>
+      <div class="footer-contact-item"><span class="contact-icon">📞</span><span>8208556485</span></div>
+      <div class="footer-contact-item"><span class="contact-icon">📧</span><span>maheshwavdhane0@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="contact-icon">📍</span><span>Ch.Sambhajinagar, Mahanagar 1, CIDCO Waluj</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 one8 Clothing. All rights reserved.</span>
+    <div class="footer-bottom-right">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>🛒 Your Cart</h2>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-calc">
+      <div class="calc-row"><span>Subtotal</span><span id="subtotalAmt">₹0</span></div>
+      <div class="calc-row" id="deliveryRow"><span>Delivery</span><span id="deliveryAmt">₹49</span></div>
+      <hr class="calc-divider"/>
+      <div class="calc-total"><span>Total</span><span id="totalAmt">₹0</span></div>
+    </div>
+    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout →</button>
+    <div class="secure-txt">🔒 100% Secure Payment via Razorpay</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span>✅</span> <span id="toastMsg">Added to cart!</span></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+// ── CART ─────────────────────────────────────────────
+let cart = JSON.parse(localStorage.getItem('one8_cart')||'[]')
+
+function saveCart(){
+  localStorage.setItem('one8_cart',JSON.stringify(cart))
+  document.getElementById('cartCount').textContent = cart.reduce((a,b)=>a+b.qty,0)
+}
+
+function openCart(){
+  document.getElementById('overlay').classList.add('open')
+  document.getElementById('cartSidebar').classList.add('open')
+  renderCart()
+}
+
+function closeCart(){
+  document.getElementById('overlay').classList.remove('open')
+  document.getElementById('cartSidebar').classList.remove('open')
+}
+
+function addToCart(id,name,price,imageUrl,size,btn){
+  const ex = cart.find(i=>i.id===id&&i.size===size)
+  if(ex){ex.qty++}else{cart.push({id,name,price,imageUrl,size,qty:1})}
+  saveCart()
+  if(btn){
+    btn.textContent='✓ Added'
+    btn.classList.add('added')
+    setTimeout(()=>{btn.textContent='Add +';btn.classList.remove('added')},1500)
+  }
+  showToast(name+' ('+size+') added!')
+}
+
+function renderCart(){
+  const el=document.getElementById('cartItems')
+  const footer=document.getElementById('cartFooter')
+  if(!cart.length){
+    el.innerHTML='<div class="cart-empty"><p>🛒</p><p>Your cart is empty</p></div>'
+    footer.style.display='none'
+    return
+  }
+  footer.style.display='block'
+  el.innerHTML=cart.map((item,i)=>`
+    <div class="cart-item">
+      <div class="ci-img">
+        ${item.imageUrl?`<img src="${item.imageUrl}" alt="${item.name}">`:'👔'}
+      </div>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-size">Size: ${item.size}</div>
+        <div class="ci-row">
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+          </div>
+          <span class="ci-price">₹${item.price*item.qty}</span>
+          <button class="ci-remove" onclick="removeItem(${i})">🗑</button>
+        </div>
+      </div>
+    </div>
+  `).join('')
+  const sub=cart.reduce((a,b)=>a+b.price*b.qty,0)
+  const del=sub>=499?0:49
+  document.getElementById('subtotalAmt').textContent='₹'+sub
+  const dr=document.getElementById('deliveryRow')
+  document.getElementById('deliveryAmt').textContent=del===0?'FREE':'₹'+del
+  if(del===0)dr.classList.add('free');else dr.classList.remove('free')
+  document.getElementById('totalAmt').textContent='₹'+(sub+del)
+}
+
+function changeQty(i,d){
+  cart[i].qty+=d
+  if(cart[i].qty<1)cart.splice(i,1)
+  saveCart();renderCart()
+}
+
+function removeItem(i){
+  cart.splice(i,1)
+  saveCart();renderCart()
+}
+
+function showToast(msg){
+  document.getElementById('toastMsg').textContent=msg||'Added to cart!'
+  const t=document.getElementById('toast')
+  t.classList.add('show')
+  setTimeout(()=>t.classList.remove('show'),2200)
+}
+
+// ── PRODUCTS ─────────────────────────────────────────
+let allProducts=[]
+
+async function loadProducts(cat='all'){
+  const grid=document.getElementById('productGrid')
+  grid.innerHTML='<div class="skeleton"></div>'.repeat(4)
+  try{
+   let q=db.collection('products')
+if(cat!=='all')q=q.where('category','==',cat)
+const snap=await q.orderBy('createdAt','desc').get()
+    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}))
+    document.getElementById('productCount').textContent=allProducts.length+' Products'
+    renderProducts(allProducts)
+  }catch(e){
+    grid.innerHTML='<div class="empty-state"><p>👔</p><p>No products yet. Add from admin panel.</p></div>'
+  }
+}
+
+function renderProducts(products){
+  const grid=document.getElementById('productGrid')
+  if(!products.length){
+    grid.innerHTML='<div class="empty-state"><p>🔍</p><p>No products found</p></div>'
+    return
+  }
+  grid.innerHTML=products.map(p=>`
+    <div class="product-card">
+      <span class="product-badge">${p.type||'New'}</span>
+      <button class="product-wish" onclick="event.stopPropagation()">🤍</button>
+      <div class="product-img">
+        ${p.imageUrl?`<img src="${p.imageUrl}" alt="${p.name}">`:'👔'}
+      </div>
+      <div class="product-body">
+        <div class="product-brand">one8</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-type">${p.category} · ${p.type||'premium'}</div>
+        <div class="size-row">
+          ${['S','M','L','XL','XXL'].map((s,i)=>`
+            <button class="size-btn${i===1?' selected':''}" onclick="selectSize(this)">${s}</button>
+          `).join('')}
+        </div>
+        <div class="product-footer">
+          <div class="price-wrap">
+            <div class="product-mrp">₹1,299</div>
+            <div class="product-price">₹${p.price}</div>
+          </div>
+          <button class="add-btn" onclick="handleAdd('${p.id}','${p.name}',${p.price},'${p.imageUrl||''}',this)">Add +</button>
+        </div>
+      </div>
+    </div>
+  `).join('')
+}
+
+function selectSize(btn){
+  btn.closest('.size-row').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'))
+  btn.classList.add('selected')
+}
+
+function handleAdd(id,name,price,imageUrl,btn){
+  const size=btn.closest('.product-card').querySelector('.size-btn.selected')?.textContent||'M'
+  addToCart(id,name,price,imageUrl,size,btn)
+}
+
+function filterProducts(cat,btnEl){
+  if(btnEl){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'))
+    btnEl.classList.add('active')
+  }
+  loadProducts(cat)
+  document.getElementById('products').scrollIntoView({behavior:'smooth'})
+}
+
+function searchProducts(){
+  const q=document.getElementById('searchInput').value.toLowerCase()
+  if(!q){renderProducts(allProducts);return}
+  renderProducts(allProducts.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q)))
+}
+
+saveCart()
+loadProducts()
+</script>
+</body>
+</html>

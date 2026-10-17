@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="referrer" content="no-referrer-when-downgrade">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>one8 Admin Panel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f7fa;color:#1a1a1a}
+.nav{background:#6B8E23;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:3px}
+.nav-right{display:flex;gap:12px;align-items:center}
+.nav-btn{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;text-decoration:none}
+.nav-btn:hover{background:rgba(255,255,255,0.3)}
+.nav-btn.danger{background:#ef4444}
+
+.container{max-width:1100px;margin:0 auto;padding:24px 16px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.stat-num{font-size:32px;font-weight:800;color:#6B8E23}
+.stat-label{font-size:13px;color:#888;margin-top:4px}
+
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:14px;background:#fff;color:#666;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.tab.active{background:#6B8E23;color:#fff}
+
+/* ADD PRODUCT FORM */
+.form-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:24px}
+.form-title{font-size:18px;font-weight:700;margin-bottom:20px;color:#1a1a1a}
+.form-row{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px}
+@media(min-width:600px){.form-row{grid-template-columns:1fr 1fr}}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#444}
+input,select,textarea{border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 14px;font-size:14px;outline:none;transition:border 0.2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:#6B8E23}
+textarea{resize:vertical;min-height:80px}
+
+.img-upload{border:2px dashed #6B8E23;border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:background 0.2s}
+.img-upload:hover{background:#f0f8ff}
+.img-preview{width:120px;height:150px;object-fit:cover;border-radius:10px;margin:0 auto 8px;display:block}
+.img-placeholder{font-size:40px;margin-bottom:8px}
+.img-label{font-size:13px;color:#6B8E23;font-weight:600}
+
+.submit-btn{background:#6B8E23;color:#fff;border:none;padding:13px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;transition:background 0.2s}
+.submit-btn:hover{background:#7A9E2E}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* PRODUCTS TABLE */
+.products-list{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.table-header{display:grid;grid-template-columns:60px 1fr 100px 90px 80px 80px;gap:12px;padding:14px 16px;background:#f8f8f8;font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.table-row{display:grid;grid-template-columns:60px 1fr 100px 90px 80px 80px;gap:12px;padding:14px 16px;border-top:1px solid #f0f0f0;align-items:center}
+.table-row:hover{background:#fafafa}
+.prod-thumb{width:52px;height:64px;object-fit:cover;border-radius:8px;background:#f0f0f0}
+.prod-thumb-placeholder{width:52px;height:64px;border-radius:8px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:24px}
+.prod-name{font-weight:600;font-size:14px}
+.prod-cat{font-size:12px;color:#888;text-transform:capitalize;margin-top:2px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge.instock{background:#dcfce7;color:#16a34a}
+.badge.outstock{background:#fee2e2;color:#dc2626}
+.toggle-btn{background:#e0f0f8;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;color:#2A9DC8}
+.del-btn{background:#fee2e2;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;color:#dc2626}
+
+.alert{padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:14px;font-weight:500;display:none}
+.alert.success{background:#dcfce7;color:#16a34a}
+.alert.error{background:#fee2e2;color:#dc2626}
+
+/* ORDERS */
+.order-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.order-id{font-weight:700;font-size:14px}
+.order-date{font-size:12px;color:#888}
+.order-amount{font-weight:800;color:#E8734A;font-size:16px}
+.order-info p{font-size:13px;color:#555;margin-bottom:3px}
+
+.empty{text-align:center;padding:48px;color:#aaa}
+.empty p{font-size:36px;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">one8 Admin</div>
+  <div class="nav-right">
+    <a href="index.html" class="nav-btn">← View Shop</a>
+    <button class="nav-btn danger" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="totalProducts">0</div><div class="stat-label">Products</div></div>
+    <div class="stat"><div class="stat-num" id="totalOrders">0</div><div class="stat-label">Orders</div></div>
+    <div class="stat"><div class="stat-num" id="inStockCount">0</div><div class="stat-label">In Stock</div></div>
+    <div class="stat"><div class="stat-num" id="totalRevenue">₹0</div><div class="stat-label">Revenue</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('add',this)">➕ Add Product</button>
+    <button class="tab" onclick="showTab('products',this)">📦 Products</button>
+    <button class="tab" onclick="showTab('orders',this)">🛒 Orders</button>
+  </div>
+
+  <!-- ADD PRODUCT TAB -->
+  <div id="tab-add">
+    <div class="form-card">
+      <div class="form-title">Add New Product</div>
+      <div class="alert" id="formAlert"></div>
+
+      <!-- Image Upload -->
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Product Photo *</label>
+        <div class="img-upload" onclick="document.getElementById('imageInput').click()">
+          <img id="imgPreview" class="img-preview" style="display:none"/>
+          <div id="imgPlaceholder">
+            <div class="img-placeholder">📷</div>
+            <div class="img-label">Click to upload photo</div>
+            <div style="font-size:12px;color:#aaa;margin-top:4px">JPG, PNG supported</div>
+          </div>
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage(event)"/>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="prodName" placeholder="e.g. Peach Cotton Shirt"/>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="prodCat">
+            <option value="shirt">Shirt</option>
+            <option value="tshirt">T-Shirt</option>
+            <option value="jeans">Jeans</option>
+            <option value="nightpant">Night Pant</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" id="prodPrice" value="899" min="1"/>
+        </div>
+        <div class="form-group">
+          <label>Shirt Type</label>
+          <select id="prodType">
+            <option value="plain">Plain</option>
+            <option value="stripe">Stripe / Line</option>
+            <option value="check">Check</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Description</label>
+        <textarea id="prodDesc" placeholder="e.g. 100% cotton, slim fit, mandarin collar"></textarea>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="addProduct()">➕ Add Product</button>
+    </div>
+  </div>
+
+  <!-- PRODUCTS TAB -->
+  <div id="tab-products" style="display:none">
+    <div class="products-list">
+      <div class="table-header">
+        <span>Photo</span><span>Product</span><span>Category</span><span>Price</span><span>Status</span><span>Action</span>
+      </div>
+      <div id="productsList"></div>
+    </div>
+  </div>
+
+  <!-- ORDERS TAB -->
+  <div id="tab-orders" style="display:none">
+    <div id="ordersList"></div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+// ─── AUTH CHECK ──────────────────────────────────────
+auth.onAuthStateChanged(user => {
+  if (!user) window.location.href = 'admin-login.html'
+  else loadStats()
+})
+
+function logout() {
+  auth.signOut().then(() => window.location.href = 'admin-login.html')
+}
+
+// ─── TABS ────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display='none')
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'))
+  document.getElementById('tab-'+tab).style.display = 'block'
+  btn.classList.add('active')
+  if(tab === 'products') loadProducts()
+  if(tab === 'orders') loadOrders()
+}
+
+// ─── IMAGE PREVIEW ────────────────────────────────────
+function previewImage(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = ev => {
+    document.getElementById('imgPreview').src = ev.target.result
+    document.getElementById('imgPreview').style.display = 'block'
+    document.getElementById('imgPlaceholder').style.display = 'none'
+  }
+  reader.readAsDataURL(file)
+}
+
+// ─── ADD PRODUCT ─────────────────────────────────────
+async function addProduct() {
+  const name = document.getElementById('prodName').value.trim()
+  const category = document.getElementById('prodCat').value
+  const price = parseInt(document.getElementById('prodPrice').value)
+  const type = document.getElementById('prodType').value
+  const description = document.getElementById('prodDesc').value.trim()
+  const imageFile = document.getElementById('imageInput').files[0]
+  const btn = document.getElementById('submitBtn')
+  const alert = document.getElementById('formAlert')
+
+  if (!name || !price) { showAlert('Please fill name and price', 'error'); return }
+  if (!imageFile) { showAlert('Please upload a product photo', 'error'); return }
+
+  btn.textContent = 'Uploading...'
+  btn.disabled = true
+
+  try {
+    // Upload image to Firebase Storage
+    const formData = new FormData()
+formData.append('file', imageFile)
+formData.append('upload_preset', 'one8_products')
+
+const cloudRes = await fetch(
+  'https://api.cloudinary.com/v1_1/rnza44ir/image/upload',
+  { method: 'POST', body: formData }
+)
+const cloudData = await cloudRes.json()
+console.log('Cloudinary Result:', cloudData)  
+console.log('Image URL:', cloudData.secure_url)
+const imageUrl = cloudData.secure_url
+
+    // Save to Firestore
+    await db.collection('products').add({
+      name, category, price, type, description,
+      imageUrl, inStock: true,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+
+    showAlert('✅ Product added successfully!', 'success')
+    // Reset form
+    document.getElementById('prodName').value = ''
+    document.getElementById('prodPrice').value = '899'
+    document.getElementById('prodDesc').value = ''
+    document.getElementById('imageInput').value = ''
+    document.getElementById('imgPreview').style.display = 'none'
+    document.getElementById('imgPlaceholder').style.display = 'block'
+    loadStats()
+  } catch(e) {
+    showAlert('Error: ' + e.message, 'error')
+  }
+
+  btn.textContent = '➕ Add Product'
+  btn.disabled = false
+}
+
+// ─── LOAD PRODUCTS ────────────────────────────────────
+async function loadProducts() {
+  const el = document.getElementById('productsList')
+  el.innerHTML = '<div class="empty"><p>⏳</p><p>Loading...</p></div>'
+  const snap = await db.collection('products').orderBy('createdAt','desc').get()
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty"><p>📦</p><p>No products yet. Add from above.</p></div>'
+    return
+  }
+  el.innerHTML = snap.docs.map(doc => {
+    const p = doc.data()
+    return `
+      <div class="table-row">
+        ${p.imageUrl 
+          ? `<img src="${p.imageUrl}" class="prod-thumb" alt="${p.name}">`
+          : `<div class="prod-thumb-placeholder">👔</div>`}
+        <div><div class="prod-name">${p.name}</div><div class="prod-cat">${p.type||''}</div></div>
+        <div style="font-size:13px;text-transform:capitalize">${p.category}</div>
+        <div style="font-weight:700">₹${p.price}</div>
+        <div><span class="badge ${p.inStock?'instock':'outstock'}">${p.inStock?'In Stock':'Out'}</span></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="toggle-btn" onclick="toggleStock('${doc.id}',${p.inStock})">${p.inStock?'Mark Out':'Mark In'}</button>
+          <button class="del-btn" onclick="deleteProduct('${doc.id}')">Delete</button>
+        </div>
+      </div>
+    `
+  }).join('')
+}
+
+// ─── TOGGLE STOCK ─────────────────────────────────────
+async function toggleStock(id, current) {
+  await db.collection('products').doc(id).update({ inStock: !current })
+  loadProducts()
+  loadStats()
+}
+
+// ─── DELETE PRODUCT ───────────────────────────────────
+async function deleteProduct(id) {
+  if (!confirm('Delete this product? This cannot be undone.')) return
+  await db.collection('products').doc(id).delete()
+  loadProducts()
+  loadStats()
+}
+
+// ─── LOAD ORDERS ─────────────────────────────────────
+async function loadOrders() {
+  const el = document.getElementById('ordersList')
+  el.innerHTML = '<div class="empty"><p>⏳</p><p>Loading orders...</p></div>'
+  const snap = await db.collection('orders').orderBy('createdAt','desc').get()
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty"><p>🛒</p><p>No orders yet.</p></div>'
+    return
+  }
+  el.innerHTML = snap.docs.map(doc => {
+    const o = doc.data()
+    const date = o.createdAt?.toDate().toLocaleDateString('en-IN') || 'N/A'
+    return `
+      <div class="order-card">
+        <div class="order-top">
+          <div>
+            <div class="order-id">Order #${doc.id.slice(0,8).toUpperCase()}</div>
+            <div class="order-date">${date}</div>
+          </div>
+          <div class="order-amount">₹${o.total}</div>
+        </div>
+        <div class="order-info">
+          <p>👤 ${o.customerName}</p>
+          <p>📞 ${o.customerPhone}</p>
+          <p>📍 ${o.address}, ${o.city} - ${o.pincode}</p>
+        </div>
+      </div>
+    `
+  }).join('')
+}
+
+// ─── STATS ───────────────────────────────────────────
+async function loadStats() {
+  const [prodSnap, orderSnap] = await Promise.all([
+    db.collection('products').get(),
+    db.collection('orders').get()
+  ])
+  document.getElementById('totalProducts').textContent = prodSnap.size
+  document.getElementById('totalOrders').textContent = orderSnap.size
+  document.getElementById('inStockCount').textContent = prodSnap.docs.filter(d=>d.data().inStock).length
+  const revenue = orderSnap.docs.reduce((a,d)=>a+(d.data().total||0),0)
+  document.getElementById('totalRevenue').textContent = '₹'+revenue
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('formAlert')
+  el.textContent = msg
+  el.className = 'alert ' + type
+  el.style.display = 'block'
+  setTimeout(() => el.style.display='none', 4000)
+}
+</script>
+</body>
+</html>
