@@ -399,10 +399,10 @@ footer{background:#1a2000;color:#94a3b8;padding:48px 20px 24px}
 
 <script>
 // ── CART ─────────────────────────────────────────────
-let cart = JSON.parse(localStorage.getItem('one8_cart')||'[]')
+let cart = JSON.parse(localStorage.getItem('one4_cart')||'[]')
 
 function saveCart(){
-  localStorage.setItem('one8_cart',JSON.stringify(cart))
+  localStorage.setItem('one4_cart',JSON.stringify(cart))
   document.getElementById('cartCount').textContent = cart.reduce((a,b)=>a+b.qty,0)
 }
 
