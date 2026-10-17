@@ -15,12 +15,102 @@ p{color:#666;font-size:15px;margin-bottom:24px;line-height:1.6}
 .contact{margin-top:20px;font-size:13px;color:#aaa}
 </style>
 </head>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+const orderId = localStorage.getItem('elen_last_order')
+
+document.getElementById('trackBtn').onclick = function(){
+  const sec = document.getElementById('trackingSection')
+  if(sec.style.display === 'none'){
+    sec.style.display = 'block'
+    this.textContent = '✕ Hide Tracking'
+    loadTracking()
+  } else {
+    sec.style.display = 'none'
+    this.textContent = '📦 Track My Order'
+  }
+}
+
+async function loadTracking(){
+  if(!orderId){ showDefaultTracking(); return }
+  try{
+    const doc = await db.collection('orders').doc(orderId).get()
+    if(doc.exists){
+      const status = doc.data().status || 'placed'
+      renderTracking(status)
+    } else {
+      showDefaultTracking()
+    }
+  } catch(e){ showDefaultTracking() }
+}
+
+function renderTracking(currentStatus){
+  const steps = [
+    { key:'placed',    icon:'🛍️', label:'Order Placed',      desc:'We received your order' },
+    { key:'confirmed', icon:'✅', label:'Order Confirmed',    desc:'Your order is confirmed' },
+    { key:'shipped',   icon:'🚚', label:'Shipped',            desc:'Your order is on the way' },
+    { key:'delivery',  icon:'📦', label:'Out for Delivery',   desc:'Almost there!' },
+    { key:'delivered', icon:'🎉', label:'Delivered',          desc:'Enjoy your purchase!' },
+  ]
+
+  const order = ['placed','confirmed','shipped','delivery','delivered']
+  const currentIndex = order.indexOf(currentStatus)
+
+  document.getElementById('trackingSteps').innerHTML = steps.map((step, i) => {
+    let state = i < currentIndex ? 'done' : i === currentIndex ? 'active' : 'pending'
+    const line = i < steps.length - 1
+      ? `<div class="track-line ${i < currentIndex ? 'done' : 'pending'}"></div>`
+      : ''
+    return `
+      <div class="track-step">
+        <div>
+          <div class="track-dot ${state}">${state === 'done' ? '✓' : step.icon}</div>
+          ${line}
+        </div>
+        <div class="track-info">
+          <div class="track-title ${state}">${step.label}</div>
+          <div class="track-date">${state === 'pending' ? 'Pending' : step.desc}</div>
+        </div>
+      </div>
+    `
+  }).join('')
+}
+
+function showDefaultTracking(){ renderTracking('placed') }
+loadTracking()
+</script>
 <body>
 <div class="card">
   <div class="icon">🎉</div>
   <h1>Order Placed!</h1>
   <p>Thank you for shopping at one8. Your order has been placed successfully. We will contact you on your phone number shortly.</p>
   <a href="index.html" class="btn">Continue Shopping →</a>
+<a href="#" id="trackBtn" class="btn" style="background:#6B8E23;margin-top:12px;display:block">📦 Track My Order</a>
+
+<div id="trackingSection" style="display:none;margin-top:24px;text-align:left">
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;text-align:center">Order Tracking</h3>
+  <div id="trackingSteps"></div>
+</div>
+
+<style>
+.track-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start}
+.track-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
+.track-dot.done{background:#dcfce7;border:2px solid #22c55e}
+.track-dot.active{background:#fef9c3;border:2px solid #eab308;animation:pulse 1.5s infinite}
+.track-dot.pending{background:#f0f0f0;border:2px solid #ddd}
+.track-info{}
+.track-title{font-weight:700;font-size:14px;margin-bottom:2px}
+.track-title.done{color:#16a34a}
+.track-title.active{color:#ca8a04}
+.track-title.pending{color:#aaa}
+.track-date{font-size:12px;color:#aaa}
+.track-line{width:2px;height:24px;margin-left:17px;margin-top:-10px;margin-bottom:-10px}
+.track-line.done{background:#22c55e}
+.track-line.pending{background:#e0e0e0}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+</style>
   <div class="contact">Questions? Call us: 8208556485</div>
 </div>
 </body>
