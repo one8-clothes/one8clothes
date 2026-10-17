@@ -344,11 +344,21 @@ async function loadOrders() {
           <div class="order-amount">₹${o.total}</div>
         </div>
         <div class="order-info">
-          <p>👤 ${o.customerName}</p>
-          <p>📞 ${o.customerPhone}</p>
-          <p>📍 ${o.address}, ${o.city} - ${o.pincode}</p>
-        </div>
-      </div>
+  <p>👤 ${o.customerName}</p>
+  <p>📞 ${o.customerPhone}</p>
+  <p>📍 ${o.address}, ${o.city} - ${o.pincode}</p>
+  <div style="margin-top:10px">
+    <label style="font-size:12px;font-weight:700;color:#555">Update Status:</label>
+    <select onchange="updateOrderStatus('${doc.id}',this.value)"
+      style="margin-left:8px;padding:6px 12px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:13px;font-weight:600;outline:none">
+      <option value="placed"    ${o.status==='placed'?'selected':''}>🛍️ Order Placed</option>
+      <option value="confirmed" ${o.status==='confirmed'?'selected':''}>✅ Confirmed</option>
+      <option value="shipped"   ${o.status==='shipped'?'selected':''}>🚚 Shipped</option>
+      <option value="delivery"  ${o.status==='delivery'?'selected':''}>📦 Out for Delivery</option>
+      <option value="delivered" ${o.status==='delivered'?'selected':''}>🎉 Delivered</option>
+    </select>
+  </div>
+</div>
     `
   }).join('')
 }
@@ -372,6 +382,10 @@ function showAlert(msg, type) {
   el.className = 'alert ' + type
   el.style.display = 'block'
   setTimeout(() => el.style.display='none', 4000)
+}
+  async function updateOrderStatus(orderId, status){
+  await db.collection('orders').doc(orderId).update({ status: status })
+  alert('Order status updated to: ' + status)
 }
 </script>
 </body>
