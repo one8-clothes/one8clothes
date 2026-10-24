@@ -103,6 +103,12 @@ input:focus{border-color:#6B8E23}
 
 <script>
 var cart = JSON.parse(localStorage.getItem('one4_cart') || '[]')
+  auth.onAuthStateChanged(function(user){
+  if(!user){
+    localStorage.setItem('after_login','checkout.html')
+    window.location.href = 'user-login.html'
+  }
+})
 var selectedPayment = 'online'
 
 if(cart.length === 0){
