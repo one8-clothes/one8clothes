@@ -119,6 +119,11 @@ input:focus{border-color:#6B8E23}
 auth.onAuthStateChanged(user => {
   if(user) window.location.href = 'user-profile.html'
 })
+  function goAfterLogin(){
+  var next = localStorage.getItem('after_login')
+  localStorage.removeItem('after_login')
+  window.location.href = next || 'user-profile.html'
+}
 
 function showTab(tab){
   document.getElementById('loginForm').style.display = tab==='login' ? 'block' : 'none'
