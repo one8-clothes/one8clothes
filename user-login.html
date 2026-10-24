@@ -203,7 +203,7 @@ async function googleLogin(){
     window.location.href = 'user-profile.html'
   } catch(e){
     console.log(e.code, e.message)
-    showError('Google login failed: ' + e.code)
+    showError('Failed: ' + e.code + ' | domain: ' + window.location.hostname)
   }
 }
 </script>
