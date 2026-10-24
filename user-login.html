@@ -202,7 +202,8 @@ async function googleLogin(){
     }, { merge: true })
     window.location.href = 'user-profile.html'
   } catch(e){
-    showError('Google login failed. Try again.')
+    console.log(e.code, e.message)
+    showError('Google login failed: ' + e.code)
   }
 }
 </script>
