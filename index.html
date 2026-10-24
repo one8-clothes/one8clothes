@@ -477,6 +477,14 @@ function removeItem(i){
   cart.splice(i,1)
   saveCart();renderCart()
 }
+  function goCheckout(){
+  if(auth.currentUser){
+    window.location.href = 'checkout.html'
+  } else {
+    localStorage.setItem('after_login','checkout.html')
+    window.location.href = 'user-login.html'
+  }
+}
 
 function showToast(msg){
   document.getElementById('toastMsg').textContent=msg||'Added to cart!'
