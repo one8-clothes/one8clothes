@@ -113,10 +113,7 @@ auth.onAuthStateChanged(async user => {
 async function loadOrders(uid){
   const el = document.getElementById('ordersList')
   try{
-    const snap = await db.collection('orders')
-      .where('userId','==',uid)
-      .orderBy('createdAt','desc')
-      .get()
+    const snap = await db.collection('orders').where('userId','==',uid).get()
 
     if(snap.empty){
       el.innerHTML = `
@@ -128,12 +125,20 @@ async function loadOrders(uid){
       return
     }
 
-    el.innerHTML = snap.docs.map(doc => {
+    const docs = snap.docs.sort((a,b)=>{
+      const at = a.data().createdAt?.seconds || 0
+      const bt = b.data().createdAt?.seconds || 0
+      return bt - at
+    })
+
+    el.innerHTML = docs.map(doc => {
       const o = doc.data()
-      const status = o.status || 'placed'
+      let status = o.status || 'placed'
+      if(trackOrder.indexOf(status) === -1) status = 'placed'
       const currentIndex = trackOrder.indexOf(status)
       const date = o.createdAt?.toDate().toLocaleDateString('en-IN') || 'N/A'
       const items = o.items || []
+      const pay = o.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'
 
       const miniTrack = trackSteps.map((step, i) => {
         const state = i < currentIndex ? 'done' : i === currentIndex ? 'active' : 'pending'
@@ -154,14 +159,15 @@ async function loadOrders(uid){
           <div class="order-top">
             <div>
               <div class="order-id">Order #${doc.id.slice(0,8).toUpperCase()}</div>
-              <div class="order-date">${date}</div>
+              <div class="order-date">${date} · ${pay}</div>
             </div>
             <div class="order-amount">₹${o.total}</div>
           </div>
           <div class="order-items">
             ${items.map(item=>`
-              <div class="order-item-row">
-                <span>${item.name} (${item.size}) × ${item.qty}</span>
+              <div class="order-item-row" style="align-items:center;gap:10px">
+                ${item.imageUrl ? `<img src="${item.imageUrl}" style="width:48px;height:60px;object-fit:cover;border-radius:8px">` : ''}
+                <span style="flex:1">${item.name} (${item.size}) × ${item.qty}</span>
                 <span>₹${item.price * item.qty}</span>
               </div>
             `).join('')}
@@ -171,7 +177,8 @@ async function loadOrders(uid){
       `
     }).join('')
   } catch(e){
-    el.innerHTML = '<div class="loading">Error loading orders. Please refresh.</div>'
+    console.log(e)
+    el.innerHTML = '<div class="loading">Error: ' + e.code + '</div>'
   }
 }
 
